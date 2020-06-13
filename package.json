@@ -1,0 +1,21 @@
+{
+  "name": "html",
+  "version": "1.0.0",
+  "description": "## インストール",
+  "main": "index.js",
+  "dependencies": {
+    "cores": "^0.8.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase": "^7.15.1",
+    "nodemon": "^2.0.4",
+    "sugar": "^2.0.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "dev": ""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
