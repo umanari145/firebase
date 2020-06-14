@@ -1,21 +1,49 @@
 
-const firebase = require('firebase');
-const config = require('./config.js');
+const functions = require('firebase-functions');
 const Sugar = require('sugar');
 const express = require('express');
 const cors = require('cors');
 const app = express()
 const bodyParser = require('body-parser');
+const firebase  = require('firebase-admin');
 
-firebase.initializeApp(config.firebaseConfig);
-database = firebase.database();
-
+firebase.initializeApp(functions.config().firebase);
+const database = firebase.database();
 
 app.use(cors())
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+
+
+const anonymousUser = {
+    id: "anon",
+    name: "Anonymous",
+    avatar: ""
+};
+
+const checkUser = (req, res, next) => {
+    req.user = anonymousUser;
+    if (req.query.auth_token !== undefined) {
+        let idToken = req.query.auth_token;
+        firebase.auth().verifyIdToken(idToken).then(decodedIdToken => {
+            let authUser = {
+                id: decodedIdToken.user_id,
+                name: decodedIdToken.name,
+                avatar: decodedIdToken.picture
+            };
+            req.user = authUser;
+            next();
+        }).catch(error => {
+            next();
+        });
+    } else {
+        next();
+    };
+};
+
+app.use(checkUser);
 
 //新規追加
 app.post('/:jname', (req, res) => {
@@ -82,6 +110,9 @@ app.delete('/:jname', (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
-});
+/*
+  nodeサーバーを使用する場合
+ */
+//app.listen(3000, () => {
+//  console.log('Example app listening on port 3000!');
+exports.v1 = functions.https.onRequest(app);

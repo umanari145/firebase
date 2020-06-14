@@ -1,5 +1,5 @@
 const firebase = require('firebase');
-const config = require('./config.js');
+const config = require('../config.js');
 const Sugar = require('sugar');
 const fs = require('fs');
 

@@ -9,12 +9,14 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^7.15.1",
+    "firebase-admin": "^8.12.1",
+    "firebase-functions": "^3.7.0",
     "nodemon": "^2.0.4",
     "sugar": "^2.0.6"
   },
   "devDependencies": {},
   "scripts": {
-    "serve": "npx nodemon index.js"
+    "serve": "npx nodemon node_sample/index.js"
   },
   "keywords": [],
   "author": "",
