@@ -4,6 +4,7 @@
   "description": "## インストール",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "cores": "^0.8.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -13,7 +14,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "dev": ""
+    "serve": "npx nodemon index.js"
   },
   "keywords": [],
   "author": "",
