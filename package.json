@@ -16,7 +16,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "serve": "npx nodemon node_sample/index.js"
+    "serve": "npx nodemon functions/index.js"
   },
   "keywords": [],
   "author": "",

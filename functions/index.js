@@ -1,4 +1,6 @@
 
+/*
+本番時の読み込み
 const functions = require('firebase-functions');
 const Sugar = require('sugar');
 const express = require('express');
@@ -8,6 +10,20 @@ const bodyParser = require('body-parser');
 const firebase  = require('firebase-admin');
 
 firebase.initializeApp(functions.config().firebase);
+*/
+
+/**
+ * ローカル時の読み込み
+ */
+const firebase = require('firebase');
+const config = require('../config.js');
+const Sugar = require('sugar');
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const bodyParser = require('body-parser');
+
+firebase.initializeApp(config.firebaseConfig);
 const database = firebase.database();
 
 app.use(cors())
@@ -26,6 +42,7 @@ const anonymousUser = {
 const checkUser = (req, res, next) => {
     req.user = anonymousUser;
     if (req.query.auth_token !== undefined) {
+        console.log('auth');
         let idToken = req.query.auth_token;
         firebase.auth().verifyIdToken(idToken).then(decodedIdToken => {
             let authUser = {
@@ -39,6 +56,7 @@ const checkUser = (req, res, next) => {
             next();
         });
     } else {
+        console.log('not auth');
         next();
     };
 };
@@ -113,6 +131,8 @@ app.delete('/:jname', (req, res) => {
 /*
   nodeサーバーを使用する場合
  */
-//app.listen(3000, () => {
-//  console.log('Example app listening on port 3000!');
-exports.v1 = functions.https.onRequest(app);
+app.listen(3000, () => {
+  console.log('Example app listening on port 3000!');
+});
+
+//exports.v1 = functions.https.onRequest(app);
