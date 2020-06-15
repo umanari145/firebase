@@ -241,8 +241,29 @@ npm run watch-poll
 
 #### html
 
+簡易サーバー
 ```
 cd public
 http-server
-
 ```
+
+#### フロント(vueの作成)
+
+ vue init webpack-simple (プロジェクト名:例dummy)
+
+ただしプロジェクト名が空だとカレントディレクトにファイルが作られる
+
+? Generate project in current directory? Yes
+/bin/sh: git: not found
+? Project name html
+? Project description A Vue.js project
+? Author
+? License MIT
+? Use sass? Yes
+
+   vue-cli · Generated "html".
+
+   To get started:
+
+     npm install
+     npm run dev

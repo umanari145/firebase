@@ -1,5 +1,10 @@
 <template>
+  <div>
     <Main/>
+    aaaaa
+
+
+  </div>
 </template>
 
 <script>
