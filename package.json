@@ -4,26 +4,26 @@
   "description": "## インストール",
   "main": "index.js",
   "dependencies": {
+    "@vue/compiler-sfc": "^3.0.0-beta.15",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "cores": "^0.8.5",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "firebase": "^7.15.1",
     "firebase-admin": "^8.12.1",
     "firebase-functions": "^3.7.0",
     "jquery": "^3.5.1",
-    "laravel-mix": "^5.0.4",
     "nodemon": "^2.0.4",
+    "rollup": "^2.16.1",
     "sugar": "^2.0.6",
-    "vue": "^2.6.11"
+    "validatorjs": "^3.18.1",
+    "vue": "^2.6.11",
+    "vue-js-modal": "^2.0.0-rc.3"
   },
   "devDependencies": {
-    "browser-sync": "^2.26.7",
-    "browser-sync-webpack-plugin": "^2.0.1",
     "resolve-url-loader": "^3.1.0",
     "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
@@ -31,9 +31,7 @@
   },
   "scripts": {
     "serve": "npx nodemon functions/index.js",
-    "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "npm run dev -- --watch",
-    "watch-poll": "npm run watch -- --watch-poll"
+    "dev": "npx rollup -c rollup-config.js"
   },
   "keywords": [],
   "author": "",

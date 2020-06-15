@@ -17,7 +17,10 @@
               </table>
               <div style="text-align:center;">
                   <button @click="save_settings">設定保存</button>
-              </div>              
+              </div>
+              <div @click="bootModal('product_conditions')">
+                  商品条件
+              </div>
           </div>
       </div>
     <Conditions/>
@@ -34,22 +37,15 @@ export default {
   },
   data() {
      return {
-      settings: [],
-      product_conditions:[],
-      filter_product_conditions:[],
-      delete_ids:[],
-      records: [],
-      is_show_list:0,
-      is_show_edit:0,
-      single_product:{},
-      product_err:'',
-      price_err:'',
-      master_lists: []
+         settings:[]
     }
   },
   methods:{
     save_settings() {
         console.log('aaaa');
+    },
+    bootModal(modal_name) {
+      this.$modal.show(modal_name);
     }
   },
   mounted() {
@@ -59,7 +55,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 h3 {
   margin: 40px 0 0;
 }
