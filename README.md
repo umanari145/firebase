@@ -2,7 +2,9 @@
 
 node.jsからfirebaseへの簡易登録API
 
-## インストール
+
+
+## firebaseインストール
 
 プロジェクト作成機能があるためグローバルでインストール
 ```
@@ -232,38 +234,30 @@ app.listen(3000, () => {
 //exports.v1 = functions.https.onRequest(app);
 ```
 
-#### cs,jss watch
+## フロント(vueのプロジェクト作成)
 
-自動監視
 ```
-npm run watch-poll
+ vue create (プロジェクト名:例dummy)
+ 🎉  Successfully created project dummy.
+ 👉  Get started with the following commands:
+
+  cd dummy
+  npm run serve
+
+  DONE  Compiled successfully in 763ms                                                                                                                                                                       2:41:17 PM
+
+
+   App running at:
+   - Local:   http://localhost:8080/
+
+   It seems you are running Vue CLI inside a container.
+   Access the dev server via http://localhost:<your container's external mapped port>/
+
+   Note that the development build is not optimized.
+   To create a production build, run npm run build.
+
 ```
 
-#### html
+http://localhost:8080 にアクセスするとvueのファイルが見れる
 
-簡易サーバー
-```
-cd public
-http-server
-```
-
-#### フロント(vueの作成)
-
- vue init webpack-simple (プロジェクト名:例dummy)
-
-ただしプロジェクト名が空だとカレントディレクトにファイルが作られる
-
-? Generate project in current directory? Yes
-/bin/sh: git: not found
-? Project name html
-? Project description A Vue.js project
-? Author
-? License MIT
-? Use sass? Yes
-
-   vue-cli · Generated "html".
-
-   To get started:
-
-     npm install
-     npm run dev
+実際は適当なディレクトリに作り、一段上の階層にファイルを移動し、package.jsonやgitignoreなどは手でマージ。
