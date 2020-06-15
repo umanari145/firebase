@@ -54,7 +54,7 @@ curl -X DELETE \
 ## firebase コマンド
 
 ```
-firebase login  --no-localhost
+firebase login
 i  Firebase optionally collects CLI usage and error reporting information to help improve our products. Data is collected in accordance with Google's privacy policy (https://policies.google.com/privacy) and is not used to identify you.
 
 ? Allow Firebase to collect CLI usage and error reporting information? Yes
@@ -63,11 +63,8 @@ i  To change your data collection preference at any time, run `firebase logout` 
 Visit this URL on any device to log in:
 https://accounts.google.com/o/oauth2/auth?client_id=******************
 
-? Paste authorization code here:
+Waiting for authentication...
 
-```
-上記のhttps://accounts.google.com/o/oauth2/auth?client_id=******************にアクセスし、ハッシュ値をPaste authorization code hereに貼り付けると、
-```
 ✔  Success! Logged in as umanari145@gmail.com
 ```
 が表示され、無事ログインできる。
@@ -211,3 +208,15 @@ https://プロジェクト名-プロジェクトID.web.app
 ### APIパス
 管理画面のFunctionsにドメインがあるので
 https://APIパス/v1/〜にアクセスすれば動く
+
+
+### ローカル開発時
+node内のサーバーを利用
+```
+app.listen(3000, () => {
+  console.log('Example app listening on port 3000!');
+});
+
+//本番時はfirebaseが動かすため上記のメソッドをコメントアウトし、下記のコメントアウトを外す
+//exports.v1 = functions.https.onRequest(app);
+```

@@ -1,22 +1,7 @@
 
-/*
-本番時の読み込み
 const functions = require('firebase-functions');
-const Sugar = require('sugar');
-const express = require('express');
-const cors = require('cors');
-const app = express()
-const bodyParser = require('body-parser');
-const firebase  = require('firebase-admin');
-
-firebase.initializeApp(functions.config().firebase);
-*/
-
-/**
- * ローカル時の読み込み
- */
 const firebase = require('firebase');
-const config = require('../config.js');
+const config = require('./config.js');
 const Sugar = require('sugar');
 const express = require('express');
 const cors = require('cors');
