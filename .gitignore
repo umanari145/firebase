@@ -1,5 +1,7 @@
 config.js
 *.log
 node_modules
+public/css/*
+public/js/*
 .firebase
 firebase_key.json

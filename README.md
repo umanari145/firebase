@@ -211,7 +211,18 @@ https://APIパス/v1/〜にアクセスすれば動く
 
 
 ### ローカル開発時
+
+
+#### API
+
 node内のサーバーを利用
+
+```
+npm run serve
+
+```
+virtual.local:3000にアクセスできる
+
 ```
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
@@ -219,4 +230,19 @@ app.listen(3000, () => {
 
 //本番時はfirebaseが動かすため上記のメソッドをコメントアウトし、下記のコメントアウトを外す
 //exports.v1 = functions.https.onRequest(app);
+```
+
+#### cs,jss watch
+
+自動監視
+```
+npm run watch-poll
+```
+
+#### html
+
+```
+cd public
+http-server
+
 ```
