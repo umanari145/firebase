@@ -1,7 +1,7 @@
 <template>
   <div>
 ああああああ
-本日は晴天なり
+本日は晴アンジェシュ
   </div>
 </template>
 

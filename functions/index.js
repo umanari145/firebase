@@ -116,8 +116,8 @@ app.delete('/:jname', (req, res) => {
 /*
   nodeサーバーを使用する場合
  */
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
-});
+//app.listen(3000, () => {
+//  console.log('Example app listening on port 3000!');
+//});
 
-//exports.v1 = functions.https.onRequest(app);
+exports.v1 = functions.https.onRequest(app);
