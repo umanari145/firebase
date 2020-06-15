@@ -1,7 +1,7 @@
 <template>
   <div>
-
-
+ああああああ
+本日は晴天なり
   </div>
 </template>
 
