@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue';
 import VModal from 'vue-js-modal';
 import BootstrapVue from 'bootstrap-vue';
+import './styles/index.scss';
 
 Vue.config.productionTip = false
 

@@ -2,6 +2,21 @@
 
 node.jsからfirebaseへの簡易登録API
 
+## 参考URL
+https://github.com/loveRandy/vue-cli3.0-vueadmin
+https://www.maytry.net/start-pwa-by-vue-cli-3/
+
+## ファイル構成
+- functions firebaseのAPI
+- dist(.gitignore) 成果物 firebase上にデプロイされる成果物
+- public 開発時に参照されるファイル(このファイルを参照してdistに運ばれる)
+- src js、cssのファイル
+- .editorconfig エディタの制御
+- babel.config.js トランスパイラの設定などのファイル
+- firebase.json firebase上の設定
+- database.rules.json firebase上のdataabaseの設定
+- storage.rule.json firebase上のstorageサービスの設定
+
 
 
 ## firebaseインストール
