@@ -20,13 +20,24 @@ export default class product_conditons {
     });
   }
 
-  save_conditions(product_conditions) {
+  save_conditions(data) {
+
+    let url;
+    let type;
+    if (data['key'] !== undefined) {
+      url = `${this.url}product_conditions/${data.key}`;
+      type = 'PUT';
+    } else {
+      url = `${this.url}product_conditions`;
+      type = 'POST';
+    }
+
     return new Promise((resolve, reject) => {
         $.ajax({
-            url:`${this.url}product_conditions`,
-            type:'POST',
+            url:url,
+            type:type,
             contentType:'application/json',
-            data:product_conditions
+            data:JSON.stringify(data['product']),
         }).done((data) => {
             resolve(data)
         }).fail((data) => {
@@ -34,4 +45,21 @@ export default class product_conditons {
         })
     });
   }
+
+  delete_conditions(data) {
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url:`${this.url}product_conditions`,
+            type:'DELETE',
+            contentType:'application/json',
+            data:JSON.stringify(data['key']),
+        }).done((data) => {
+            resolve(data)
+        }).fail((data) => {
+            reject(data)
+        })
+    });
+  }
+
 }

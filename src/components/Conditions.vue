@@ -36,8 +36,8 @@
                             </td>
                             <td class="col_10 t_c" v-on:click.stop="hoge">
                                 <input type="checkbox"
-                                v-model="delete_ids"
-                                :value="product.id"
+                                v-model="delete_keys"
+                                :value="product.key"
                                 >
                             </td>
                             <td class="col_40">
@@ -175,6 +175,10 @@ export default {
                 'product': this.single_product
             };
 
+            if (this.single_product.key !== undefined) {
+              params['key'] = this.single_product.key;
+            }
+
             pc.save_conditions(params)
             .then((res) => {
                 if (res['res'] !== undefined &&res['res'] == true) {
@@ -189,38 +193,37 @@ export default {
                 console.log(res);
             })
         }
-    },
+      },
       delete_conditions() {
-      if (this.delete_ids.length == 0) {
+      if (this.delete_keys.length == 0) {
         alert("一件も選択されていません。");
         return null;
       }
 
       if (window.confirm("チェックした物件条件を削除してもよろしいですか?")){
-        /*
+
         let params = {
-          'id':this.delete_ids
+          'key':this.delete_keys
         };
-        */
-        /*
-        f_api.delete_conditions(params)
+
+        pc.delete_conditions(params)
         .then((res) => {
           if (res['res'] !== undefined &&res['res'] == true) {
 
             this.product_conditions =
-            Sugar.Array(this.product_conditions).exclude((v)=> {return (this.delete_ids.indexOf(v.id) >= 0);}).raw
+            Sugar.Array(this.product_conditions).exclude((v)=> {return (this.delete_keys.indexOf(v.key) >= 0);}).raw
 
             this.filter_product_conditions =
-            Sugar.Array(this.filter_product_conditions).exclude((v)=> {return (this.delete_ids.indexOf(v.id) >= 0);}).raw
+            Sugar.Array(this.filter_product_conditions).exclude((v)=> {return (this.delete_keys.indexOf(v.key) >= 0);}).raw
 
-            this.delete_ids = [];
+            this.delete_keys = [];
 
             alert("削除に成功しました。");
           }
         }).catch((res) => {
           alert("条件の削除に失敗しました。");
+          console.log(res);
         })
-        */
        }
       },
       close_product_modal(){
@@ -257,7 +260,7 @@ export default {
     data(){
         return {
           filter_product_conditions:[],
-          delete_ids:[],
+          delete_keys:[],
           records: [],
           is_show_list:0,
           is_show_edit:0,
