@@ -51,19 +51,15 @@ jqでみやすい形に。
 curl -X PUT \
  -H "Content-Type: application/json" \
  -d '{"name":"yamada", "email":"test"}' \
- virtual.local:3000/members/ハッシュキーの値
+ virtual.local:3000/members/ハッシュキー
 
 ```
 
 ### 削除
 ```
 curl -X DELETE \
-virtual.local:3000/members/ハッシュキーの値
-```
-
-### 全削除
-```
-curl -X DELETE \
+ -H "Content-Type: application/json" \
+ -d '["aaa","bbb", "ccc"]' \
  virtual.local:3000/members
 ```
 

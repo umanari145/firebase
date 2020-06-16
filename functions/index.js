@@ -4,14 +4,15 @@ const firebase = require('firebase');
 const config = require('./config.js');
 const Sugar = require('sugar');
 const express = require('express');
-const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 
 firebase.initializeApp(config.firebaseConfig);
 const database = firebase.database();
 
-app.use(cors())
+const cors = require('cors')({origin: true});
+app.use(cors);
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -56,7 +57,6 @@ app.post('/:jname', (req, res) => {
   let data = req.body;
   Ref.push(data);
 
-  res.header('Content-Type', 'application/json; charset=utf-8');
   res.status(201).json({result: 'ok',res:data});
 });
 
@@ -95,29 +95,26 @@ app.put('/:jname/:hash_key', (req, res) => {
   res.status(201).json({result: 'ok',res:data});
 });
 
-//個別削除
-app.delete('/:jname/:hash_key', (req, res) => {
+//削除
+app.delete('/:jname/', (req, res) => {
   let jname = req.params.jname;
-  let hash_key = req.params.hash_key;
-  database.ref(jname).child(hash_key).remove();
+  let hash_keys = req.body;
+  //console.table(hash_keys);
+  hash_keys.forEach((hash_key,i) => {
+    //console.log(hash_key);
+    database.ref(jname).child(hash_key).remove();
+  })
   res.header('Content-Type', 'application/json; charset=utf-8');
-  res.status(201).json({result: 'delete ', hash_key: hash_key});
-});
-
-//全削除
-app.delete('/:jname', (req, res) => {
-  let jname = req.params.jname;
-  database.ref(jname).remove();
-  res.header('Content-Type', 'application/json; charset=utf-8');
-  res.status(201).json({result: 'ok all delete'});
+  res.status(201).json({result: 'delete '});
 });
 
 
 /*
   nodeサーバーを使用する場合
  */
-//app.listen(3000, () => {
-//  console.log('Example app listening on port 3000!');
-//});
+/*app.listen(3000, () => {
+  console.log('Example app listening on port 3000!');
+});
+*/
 
 exports.v1 = functions.https.onRequest(app);
