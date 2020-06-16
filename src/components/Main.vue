@@ -28,7 +28,10 @@
 </template>
 <script>
 
+import product_conditions from '../api/product_conditions.js';
 import Conditions from './Conditions.vue';
+
+const pc = new product_conditions();
 
 export default {
   name: 'Main',
@@ -37,7 +40,7 @@ export default {
   },
   data() {
      return {
-         settings:[]
+       settings:[]
     }
   },
   methods:{
@@ -46,10 +49,40 @@ export default {
     },
     bootModal(modal_name) {
       this.$modal.show(modal_name);
-    }
+    },
+
+  },
+  computed:{
+      product_conditions: {
+        get() {
+            return this.$store.getters["product_conditions/get_product_conditions"];
+        }
+      }
   },
   mounted() {
-
+    Promise.all([
+      pc.read_conditions()
+      ])
+      .then((res) => {
+        if (res[0] !== undefined) {
+          let product_conditions = res[0]['product_conditions'];
+          this.$store.commit("product_conditions/set_product_conditions", product_conditions);
+        }
+/*        if (res[1] !== undefined) {
+          this.product_conditions = res[1];
+        }
+        if (res[2] !== undefined) {
+          this.records = res[2];
+        }*/
+      })
+      .catch((res) => {
+        alert("読み込みに失敗しました。");
+        console.log(res);
+      })
+      .finally((res) => {
+        console.log('--finally--');
+        console.log(res);
+      })
   }
 }
 </script>

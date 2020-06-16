@@ -39,7 +39,6 @@ curl -X POST \
  virtual.local:3000/members
 ```
 
-
 ### 一覧取得
 ```
 curl -X GET virtual.local:3000/members | jq

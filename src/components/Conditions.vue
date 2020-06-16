@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody class="table_fix_body">
-                        <tr v-for="product in filter_product_conditions"
+                        <tr :key="index" v-for="(product, index) in filter_product_conditions"
                             @click="edit_product_row(product)"
                         >
                             <td class="col_10 t_c" >
@@ -85,7 +85,7 @@
                             </td>
                             <td class="col_20 t_c" style="vertical-align:top;">
                                 <select v-model="single_product.condition" style="margin-top:10px;height:25px;">
-                                    <option :value="value" v-for="(label, value) in master_lists.conditions">
+                                    <option :value="value" :key="value" v-for="(label, value) in master_lists.conditions">
                                         {{label}}
                                     </option>
                                 </select>
@@ -107,128 +107,148 @@
 
 import Sugar from 'sugar';
 import Validator from 'validatorjs';
+import product_conditions from '../api/product_conditions.js';
+
+const pc = new product_conditions();
+
 
 export default {
+    computed:{
+        product_conditions: {
+          get() {
+              return this.$store.getters["product_conditions/get_product_conditions"];
+          },
+          set() {
+              return this.$store.setters["product_conditions/set_product_conditions"];
+          }
+        }
+    },
     methods:{
-        set_filter_product_condition() {
-			this.is_show_list = 1;
-			this.filter_product_conditions = [];
-			this.filter_product_conditions = this.product_conditions;
-		},
-        save_conditions() {
-            if(window.confirm("この商品を保存しますか?")) {
-                this.product_err = '';
-                this.price_err = '';
-
-                let data = {
-                    product_name: this.single_product.product_name || '',
-                    price_min: this.single_product.price_min || '',
-                    price_max: this.single_product.price_max || ''
-                };
-
-                let rules = {
-                    'product_name': 'required',
-                    'price_min': 'integer',
-                    'price_max': 'integer',
-                };
-
-                let error_msg = {
-                    "required.product_name": '商品名が未入力です。',
-                    integer: '価格は数値で入力してください。',
-                }
-
-                let validation = new Validator(data, rules, error_msg);
-                validation.check();
-                if (validation.errorCount > 0) {
-                    this.product_err = validation.errors.get('product_name')[0];
-                    if (validation.errors.get('price_min').length > 0) {
-                        this.price_err = validation.errors.get('price_min')[0]
-                    }
-                    if (this.price_err =='' && validation.errors.get('price_max').length > 0) {
-                        this.price_err = validation.errors.get('price_max')[0];
-                    }
-                }
-
-                if (this.price_err == '' &&  parseInt(this.single_product.price_min) >  parseInt(this.single_product.price_max)) {
-                    this.price_err = "価格の範囲が不正です。";
-                }
-
-                if (this.product_err !== '' || this.price_err !== '') {
-                    return false;
-                }
-
-                let params = {
-                    'product': this.single_product
-                };
-                f_api.save_conditions(params)
-                .then((res) => {
-                    if (res['res'] !== undefined &&res['res'] == true) {
-                        this.product_conditons = res['data'];
-                        this.filter_product_conditions = res['data'];
-                        alert("保存に成功しました。");
-                        this.is_show_edit = 0;
-                        this.is_show_list = 1;
-                    }
-                }).catch((res) => {
-                    alert("条件の保存に失敗しました。");
-                })
-            }
-        },
-        delete_conditions() {
-			if (this.delete_ids.length == 0) {
-				alert("一件も選択されていません。");
-				return null;
-			}
-
-			if (window.confirm("チェックした物件条件を削除してもよろしいですか?")){
-				let params = {
-					'id':this.delete_ids
-				};
-				f_api.delete_conditions(params)
-				.then((res) => {
-					if (res['res'] !== undefined &&res['res'] == true) {
-
-						this.product_conditions =
-						Sugar.Array(this.product_conditions).exclude((v)=> {return (this.delete_ids.indexOf(v.id) >= 0);}).raw
-
-						this.filter_product_conditions =
-						Sugar.Array(this.filter_product_conditions).exclude((v)=> {return (this.delete_ids.indexOf(v.id) >= 0);}).raw
-
-						this.delete_ids = [];
-
-						alert("削除に成功しました。");
-					}
-				}).catch((res) => {
-					alert("条件の削除に失敗しました。");
-				})
-			}
-		},
-        close_product_modal(){
-            this.$modal.hide('product_conditions');
-        },
-        number_format(str = ''){
-            let sugarStr = new Sugar.String(str);
-            return sugarStr.toNumber().format();
-        },
-        edit_product_row(product = {}) {
-            this.is_show_list = 0;
-            this.is_show_edit = 1;
-            this.single_product = product;
+      set_filter_product_condition() {
+        this.is_show_list = 1;
+        this.filter_product_conditions = [];
+        this.filter_product_conditions = this.product_conditions;
+      },
+      save_conditions() {
+        if(window.confirm("この商品を保存しますか?")) {
             this.product_err = '';
             this.price_err = '';
-        },
-        back_to_list(){
-            this.single_product = {};
-            this.is_show_list = 1;
-            this.is_show_edit = 0;
-        },
-        between_price(product = {}) {
-            let from = (product.price_min !== null && product.price_min !== undefined) ? `${product.price_min}円` :'';
-            let to = (product.price_max !== null && product.price_max !== undefined) ? `${product.price_max}円` :'';
 
-            let price_str = `${from} 〜 ${to}`;
-            return price_str;
-        },
+            let data = {
+                product_name: this.single_product.product_name || '',
+                price_min: this.single_product.price_min || '',
+                price_max: this.single_product.price_max || ''
+            };
+
+            let rules = {
+                'product_name': 'required',
+                'price_min': 'integer',
+                'price_max': 'integer',
+            };
+
+            let error_msg = {
+                "required.product_name": '商品名が未入力です。',
+                integer: '価格は数値で入力してください。',
+            }
+
+            let validation = new Validator(data, rules, error_msg);
+            validation.check();
+            if (validation.errorCount > 0) {
+                this.product_err = validation.errors.get('product_name')[0];
+                if (validation.errors.get('price_min').length > 0) {
+                    this.price_err = validation.errors.get('price_min')[0]
+                }
+                if (this.price_err =='' && validation.errors.get('price_max').length > 0) {
+                    this.price_err = validation.errors.get('price_max')[0];
+                }
+            }
+
+            if (this.price_err == '' &&  parseInt(this.single_product.price_min) >  parseInt(this.single_product.price_max)) {
+                this.price_err = "価格の範囲が不正です。";
+            }
+
+            if (this.product_err !== '' || this.price_err !== '') {
+                return false;
+            }
+
+            let params = {
+                'product': this.single_product
+            };
+
+            pc.save_conditions(params)
+            .then((res) => {
+                if (res['res'] !== undefined &&res['res'] == true) {
+                    this.product_conditons = res['data'];
+                    this.filter_product_conditions = res['data'];
+                    alert("保存に成功しました。");
+                    this.is_show_edit = 0;
+                    this.is_show_list = 1;
+                }
+            }).catch((res) => {
+                alert("条件の保存に失敗しました。");
+                console.log(res);
+            })
+        }
+    },
+      delete_conditions() {
+      if (this.delete_ids.length == 0) {
+        alert("一件も選択されていません。");
+        return null;
+      }
+
+      if (window.confirm("チェックした物件条件を削除してもよろしいですか?")){
+        /*
+        let params = {
+          'id':this.delete_ids
+        };
+        */
+        /*
+        f_api.delete_conditions(params)
+        .then((res) => {
+          if (res['res'] !== undefined &&res['res'] == true) {
+
+            this.product_conditions =
+            Sugar.Array(this.product_conditions).exclude((v)=> {return (this.delete_ids.indexOf(v.id) >= 0);}).raw
+
+            this.filter_product_conditions =
+            Sugar.Array(this.filter_product_conditions).exclude((v)=> {return (this.delete_ids.indexOf(v.id) >= 0);}).raw
+
+            this.delete_ids = [];
+
+            alert("削除に成功しました。");
+          }
+        }).catch((res) => {
+          alert("条件の削除に失敗しました。");
+        })
+        */
+       }
+      },
+      close_product_modal(){
+        this.$modal.hide('product_conditions');
+      },
+      number_format(str = ''){
+        let sugarStr = new Sugar.String(str);
+        return sugarStr.toNumber().format();
+      },
+      edit_product_row(product = {}) {
+        this.is_show_list = 0;
+        this.is_show_edit = 1;
+        this.single_product = product;
+        this.product_err = '';
+        this.price_err = '';
+      },
+      back_to_list(){
+        this.single_product = {};
+        this.is_show_list = 1;
+        this.is_show_edit = 0;
+      },
+      between_price(product = {}) {
+        let from = (product.price_min !== null && product.price_min !== undefined) ? `${product.price_min}円` :'';
+        let to = (product.price_max !== null && product.price_max !== undefined) ? `${product.price_max}円` :'';
+
+        let price_str = `${from} 〜 ${to}`;
+        return price_str;
+      }
     },
 
     created() {
@@ -236,7 +256,15 @@ export default {
     },
     data(){
         return {
-
+          filter_product_conditions:[],
+          delete_ids:[],
+          records: [],
+          is_show_list:0,
+          is_show_edit:0,
+          single_product:{},
+          product_err:'',
+          price_err:'',
+          master_lists: []
         }
     }
 }
