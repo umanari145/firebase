@@ -1,10 +1,14 @@
 <template>
-  <div>
+  <div class="modal_wrapper">
     <modal name="product_conditions"
     :width="1200"
     :height="550"
     @before-open="set_filter_product_condition"
     >
+    <div class="spininng_back" v-if="is_show_spinner == 1">
+        <b-spinner label="Spinning" type="grow">
+        </b-spinner>
+    </div>
     <div class="modal_wrapper">
         <div class="modal_title">自動予約Webツール - 商品条件</div>
             <div class="t_r" style="width:95%;">
@@ -114,14 +118,19 @@ const pc = new product_conditions();
 
 export default {
     computed:{
-        product_conditions: {
-          get() {
-              return this.$store.getters["product_conditions/get_product_conditions"];
-          },
-          set(val) {
-              this.$store.commit("product_conditions/set_product_conditions",val);
-          }
+      product_conditions: {
+        get() {
+            return this.$store.getters["product_conditions/get_product_conditions"];
+        },
+        set(val) {
+            this.$store.commit("product_conditions/set_product_conditions",val);
         }
+      },
+      user: {
+        get() {
+            return this.$store.getters["user/get_user"];
+        }
+      }
     },
     methods:{
       hoge() {
@@ -182,6 +191,7 @@ export default {
               params['key'] = this.single_product.key;
             }
 
+            this.is_show_spinner = 1;
             pc.save_and_read_conditions(params)
             .then((res) => {
                 if (res['data']['res'] !== undefined &&res['data']['res'] == true) {
@@ -192,8 +202,10 @@ export default {
                     this.is_show_list = 1;
                 }
             }).catch((res) => {
-                alert("条件の保存に失敗しました。");
-                console.log(res);
+              alert("条件の保存に失敗しました。");
+              console.log(res);
+            }).finally(() => {
+              this.is_show_spinner = 0;
             })
         }
       },
@@ -209,6 +221,7 @@ export default {
           'key':this.delete_keys
         };
 
+        this.is_show_spinner = 1;
         pc.delete_conditions(params)
         .then((res) => {
           if (res['data']['res'] !== undefined &&res['data']['res'] == true) {
@@ -225,6 +238,8 @@ export default {
         }).catch((res) => {
           alert("条件の削除に失敗しました。");
           console.log(res);
+        }).finally(() => {
+          this.is_show_spinner = 0;
         })
        }
       },
@@ -261,6 +276,7 @@ export default {
     },
     data(){
         return {
+          is_show_spinner:0,
           filter_product_conditions:[],
           delete_keys:[],
           records: [],
@@ -275,9 +291,17 @@ export default {
 }
 </script>
 <style>
-.l_20 {
-    display: inline-block;
-    width: 20%;
+
+.modal_wrapper{
+  position: relative;
+}
+
+.spininng_back{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .inner_wrapper{

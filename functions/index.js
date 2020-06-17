@@ -21,33 +21,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
-const anonymousUser = {
-    id: "anon",
-    name: "Anonymous",
-    avatar: ""
-};
-
-const checkUser = (req, res, next) => {
-    req.user = anonymousUser;
-    if (req.query.auth_token !== undefined) {
-        console.log('auth');
-        let idToken = req.query.auth_token;
-        firebase.auth().verifyIdToken(idToken).then(decodedIdToken => {
-            let authUser = {
-                id: decodedIdToken.user_id,
-                name: decodedIdToken.name,
-                avatar: decodedIdToken.picture
-            };
-            req.user = authUser;
-            next();
-        }).catch(error => {
-            next();
-        });
-    } else {
-        console.log('not auth');
-        next();
-    };
-};
 
 app.use(checkUser);
 

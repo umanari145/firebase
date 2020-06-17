@@ -1,88 +1,83 @@
 <template>
-  <div class="wrapper centering">
-      <h1 class="title">
-          ツールリスト
-      </h1>
-      <div id="front" class="centering inner_centering" style="width:80%;" v-cloak>
-          <div>
-              <table class="form">
-                  <tr>
-                      <th>メールアドレス</th>
-                      <td><input type="text" required v-model="settings.email"/></td>
-                  </tr>
-                  <tr>
-                      <th>パスワード</th>
-                      <td><input type="password" required v-model="settings.password"></td>
-                  </tr>
-              </table>
-              <div style="text-align:center;">
-                  <button @click="save_settings">設定保存</button>
-              </div>
-              <div @click="bootModal('product_conditions')">
-                  商品条件
-              </div>
-          </div>
-      </div>
-    <Conditions/>
+  <div>
+    <div class="wrapper centering">
+        <Header></Header>
+        <div v-if="is_login" class="inner_centering" style="margin-top:10px;"
+        @click="bootModal('product_conditions')">
+            商品条件({{product_conditions.length}})
+        </div>
+      <Conditions/>
+    </div>
+    <div v-if="is_loading">
+      <Loading></Loading>
+    </div>
   </div>
 </template>
 <script>
 
 import product_conditions from '../api/product_conditions.js';
 import Conditions from './Conditions.vue';
-
-const pc = new product_conditions();
+import Header from './Layout/Header.vue';
+import Loading from './Parts/Loading.vue';
 
 export default {
   name: 'Main',
   components: {
-    Conditions
+    Conditions,
+    Header,
+    Loading
   },
   data() {
-     return {
-       settings:[]
+    return {
+      is_loading:null
     }
   },
   methods:{
     save_settings() {
-        console.log('aaaa');
+
     },
     bootModal(modal_name) {
       this.$modal.show(modal_name);
-    },
-
+    }
   },
   computed:{
       product_conditions: {
         get() {
             return this.$store.getters["product_conditions/get_product_conditions"];
         }
+      },
+      is_login: {
+        get() {
+          return this.$store.getters["user/is_login"];
+        }
+      },
+      user: {
+        get() {
+          return this.$store.getters["user/get_user"];
+        }
       }
   },
   mounted() {
-    Promise.all([
+      const pc = new product_conditions();
+      this.is_loading = true;
       pc.read_conditions()
-      ])
       .then((res) => {
-        if (res[0]['data'] !== undefined && res[0]['data']['res'] == true) {
-          let product_conditions = res[0]['data']['data'];
+        if (res['data'] !== undefined && res['data']['res'] == true) {
+          let product_conditions = res['data']['data'];
           this.$store.commit("product_conditions/set_product_conditions", product_conditions);
         }
-/*        if (res[1] !== undefined) {
-          this.product_conditions = res[1];
-        }
-        if (res[2] !== undefined) {
-          this.records = res[2];
-        }*/
       })
       .catch((res) => {
         alert("読み込みに失敗しました。");
         console.log(res);
       })
       .finally((res) => {
-        console.log('--finally--');
+        this.is_loading = false;
         console.log(res);
       })
+  },
+  created() {
+
   }
 }
 </script>
