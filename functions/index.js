@@ -59,15 +59,21 @@ app.post('/:jname', (req, res) => {
   let data = req.body;
   Ref.push(data);
 
-  res.status(200).json({result: 'ok',res:data});
+  let res_data = {
+    'res':true,
+    'data':data
+  };
+
+  res.status(200).json(res_data);
 });
+
 
 //一覧取得
 app.get('/:jname', (req, res) => {
 
   let jname = req.params.jname;
 
-  db_util.getData().then((data) => {
+  db_util.getData(jname).then((data) => {
 
     let res_data = {
        'res':'',
@@ -98,30 +104,35 @@ app.put('/:jname/:hash_key', (req, res) => {
   let data = req.body;
   database.ref(jname).child(hash_key).update(data)
 
+  let res_data = {
+    'res':true,
+    'data':data
+  };
+
   res.header('Content-Type', 'application/json; charset=utf-8');
-  res.status(200).json({result: 'ok',res:data});
+  res.status(200).json(res_data);
 });
 
 //削除
 app.delete('/:jname/', (req, res) => {
   let jname = req.params.jname;
   let hash_keys = req.body;
-  //console.table(hash_keys);
   hash_keys.forEach((hash_key,i) => {
     //console.log(hash_key);
     database.ref(jname).child(hash_key).remove();
   })
   res.header('Content-Type', 'application/json; charset=utf-8');
-  res.status(200).json({result: 'delete '});
+  res.status(200).json({res: true});
 });
 
 
 /*
   nodeサーバーを使用する場合
  */
+/*
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
 });
+*/
 
-
-//exports.v1 = functions.https.onRequest(app);
+exports.v1 = functions.https.onRequest(app);

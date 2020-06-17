@@ -35,7 +35,6 @@ module.exports = class DBUtil {
           data.push(each_item);
       }
     }
-
     return data;
   }
 

@@ -1,26 +1,22 @@
 
-import $ from 'jquery';
+
+import {dev_api_url, prod_api_url} from '../api.config.js';
+import axios from 'axios';
+
+const api_url = (process.env.NODE_ENV == 'dev') ? dev_api_url : prod_api_url ;
 
 export default class product_conditons {
 
   constructor () {
-    this.url = 'https://us-central1-dummy-80371.cloudfunctions.net/v1/';
+    this.url = api_url;
   }
 
   read_conditions() {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url:`${this.url}product_conditions`,
-            type:'GET'
-        }).done((data) => {
-            resolve(data)
-        }).fail((data) => {
-            reject(data)
-        })
-    });
+    let url = `${this.url}product_conditions`;
+    return axios.get(url);
   }
 
-  save_conditions(data) {
+  async save_conditions(data) {
 
     let url;
     let type;
@@ -32,34 +28,34 @@ export default class product_conditons {
       type = 'POST';
     }
 
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url:url,
-            type:type,
-            contentType:'application/json',
-            data:JSON.stringify(data['product']),
-        }).done((data) => {
-            resolve(data)
-        }).fail((data) => {
-            reject(data)
-        })
-    });
+    let res;
+    if (type == 'PUT') {
+      res = await axios.put(url, data['product']);
+    } else if (type === 'POST') {
+      res = await axios.post(url, data['product']);
+    }
+    return res;
   }
 
-  delete_conditions(data) {
+  /**
+   * 記録+一覧データの読み込み
+   * @param  {[type]}  data 新規登録
+   * @return {Promise} 一覧用データをPromiseで
+   */
+  async save_and_read_conditions(data) {
+    await this.save_conditions(data);
+    let list_data = await this.read_conditions();
+    return list_data;
+  }
 
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url:`${this.url}product_conditions`,
-            type:'DELETE',
-            contentType:'application/json',
-            data:JSON.stringify(data['key']),
-        }).done((data) => {
-            resolve(data)
-        }).fail((data) => {
-            reject(data)
-        })
-    });
+  /**
+   * 削除
+   * @param  {[type]} data 削除するデータのキー
+   * @return {[Promise]}  結果をPromiseで返す
+   */
+  delete_conditions(data) {
+    let url = `${this.url}product_conditions`;
+    return axios.delete(url, {data:data['key']});
   }
 
 }

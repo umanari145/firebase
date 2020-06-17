@@ -225,24 +225,16 @@ https://APIパス/v1/〜にアクセスすれば動く
 ### ローカル開発時
 
 
-#### API
-
-node内のサーバーを利用
+#### API(開発時)
 
 ```
-npm run serve
-
+//この変数で開発ということを判定
+export NODE_ENV=dev
+cd /var/www/html
+firebase serve --host 0.0.0.0
+//環境変数で開発時と本番のURLが出てくる
 ```
-virtual.local:3000にアクセスできる
 
-```
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!');
-});
-
-//本番時はfirebaseが動かすため上記のメソッドをコメントアウトし、下記のコメントアウトを外す
-//exports.v1 = functions.https.onRequest(app);
-```
 
 ## フロント(vueのプロジェクト作成)
 
@@ -270,4 +262,4 @@ app.listen(3000, () => {
 
 http://localhost:8080 にアクセスするとvueのファイルが見れる
 
-実際は適当なディレクトリに作り、一段上の階層にファイルを移動し、package.jsonやgitignoreなどは手でマージ。
+実際は適当なディレクトリに作り、一段上の階層にファイルを移動し、vueで作ったpackage.jsonやgitignoreなどは手でマージ。

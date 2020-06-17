@@ -64,8 +64,8 @@ export default {
       pc.read_conditions()
       ])
       .then((res) => {
-        if (res[0] !== undefined) {
-          let product_conditions = res[0]['product_conditions'];
+        if (res[0]['data'] !== undefined && res[0]['data']['res'] == true) {
+          let product_conditions = res[0]['data']['data'];
           this.$store.commit("product_conditions/set_product_conditions", product_conditions);
         }
 /*        if (res[1] !== undefined) {

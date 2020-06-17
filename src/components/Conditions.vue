@@ -118,12 +118,15 @@ export default {
           get() {
               return this.$store.getters["product_conditions/get_product_conditions"];
           },
-          set() {
-              return this.$store.setters["product_conditions/set_product_conditions"];
+          set(val) {
+              this.$store.commit("product_conditions/set_product_conditions",val);
           }
         }
     },
     methods:{
+      hoge() {
+
+      },
       set_filter_product_condition() {
         this.is_show_list = 1;
         this.filter_product_conditions = [];
@@ -179,11 +182,11 @@ export default {
               params['key'] = this.single_product.key;
             }
 
-            pc.save_conditions(params)
+            pc.save_and_read_conditions(params)
             .then((res) => {
-                if (res['res'] !== undefined &&res['res'] == true) {
-                    this.product_conditons = res['data'];
-                    this.filter_product_conditions = res['data'];
+                if (res['data']['res'] !== undefined &&res['data']['res'] == true) {
+                    this.product_conditions = res['data']['data'];
+                    this.filter_product_conditions = res['data']['data'];
                     alert("保存に成功しました。");
                     this.is_show_edit = 0;
                     this.is_show_list = 1;
@@ -208,10 +211,9 @@ export default {
 
         pc.delete_conditions(params)
         .then((res) => {
-          if (res['res'] !== undefined &&res['res'] == true) {
+          if (res['data']['res'] !== undefined &&res['data']['res'] == true) {
 
-            this.product_conditions =
-            Sugar.Array(this.product_conditions).exclude((v)=> {return (this.delete_keys.indexOf(v.key) >= 0);}).raw
+            this.product_conditions = Sugar.Array(this.product_conditions).exclude((v)=> {return (this.delete_keys.indexOf(v.key) >= 0);}).raw
 
             this.filter_product_conditions =
             Sugar.Array(this.filter_product_conditions).exclude((v)=> {return (this.delete_keys.indexOf(v.key) >= 0);}).raw
