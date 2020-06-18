@@ -21,9 +21,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
-
-app.use(checkUser);
-
 //新規追加
 app.post('/:jname', (req, res) => {
 

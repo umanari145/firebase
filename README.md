@@ -88,7 +88,11 @@ Already logged in as メールアドレス
 
 ### 初期化
 ```
-/var/www/html # firebase init
+cd /var/www/html
+firebase init
+```
+コンソールメッセージ
+```
 
      ######## #### ########  ######## ########     ###     ######  ########
      ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
@@ -180,7 +184,12 @@ i  Writing project information to .firebaserc...
 
 ### デプロイ
 ```
+cd /var/www/html
+firebase deploy
+```
 
+コンソールメッセージ
+```
 === Deploying to 'プロジェクト名-プロジェクトID'...
 
 i  deploying database, storage, functions, hosting
@@ -219,7 +228,7 @@ https://プロジェクト名-プロジェクトID.web.app
 
 ### APIパス
 管理画面のFunctionsにドメインがあるので
-https://APIパス/v1/〜にアクセスすれば動く
+https://APIパス/v1/ 〜にアクセスすれば動く
 
 
 ### ローカル開発時
@@ -228,13 +237,20 @@ https://APIパス/v1/〜にアクセスすれば動く
 #### API(開発時)
 
 ```
-//この変数で開発ということを判定
+//この変数で開発ということを判定(dockerに入ってます)
 export NODE_ENV=dev
 cd /var/www/html
 firebase serve --host 0.0.0.0
-//環境変数で開発時と本番のURLが出てくる
+//nodeのサーバー立てなくてもこれでOK
+//環境変数で開発時と本番のURLを使い分ける
 ```
 
+cf.nodeの移動起動のサーバー(nodemon)
+```
+npm install -g nodemon
+
+nodemon functions/index.js
+```
 
 ## フロント(vueのプロジェクト作成)
 
@@ -260,6 +276,14 @@ firebase serve --host 0.0.0.0
 
 ```
 
-http://localhost:8080 にアクセスするとvueのファイルが見れる
+http://localhost:8080 にアクセスするとvueのファイルが見れる。
 
+cf.簡易サーバー(コンテナ外からでも使える)
+```
+npm i -g http-server
+cd public
+http-server
+```
+
+package.json,gitignoreに関しては<br>
 実際は適当なディレクトリに作り、一段上の階層にファイルを移動し、vueで作ったpackage.jsonやgitignoreなどは手でマージ。
