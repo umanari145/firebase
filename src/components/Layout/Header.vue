@@ -47,10 +47,10 @@ export default {
   computed:{
     user: {
       get() {
-          return this.$store.getters["user/get_user"];
+          return this.$store.getters["settings/get_user"];
       },
       set(val) {
-          this.$store.commit("user/set_user",val);
+          this.$store.commit("settings/set_user",val);
       }
     }
   },

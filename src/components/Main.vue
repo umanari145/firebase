@@ -1,11 +1,25 @@
 <template>
   <div>
-    <div class="wrapper centering">
+    <div class="wrapper centering" style="width:40%;">
         <Header></Header>
-        <div v-if="is_login" class="inner_centering" style="margin-top:10px;"
-        @click="bootModal('product_conditions')">
-            商品条件({{product_conditions.length}})
+        <div class="centering" v-if="is_login">
+          <div class="centering t_c"
+          style="margin-top:20px;"
+          @click="bootModal('settings')">
+              ユーザー管理
+          </div>
+          <div class="centering t_c"
+          style="margin-top:20px;"
+          @click="bootModal('product_conditions')">
+              商品条件({{product_conditions.length}})
+          </div>
+          <div class="centering t_c"
+          style="margin-top:20px;">
+            成績
+          </div>
+
         </div>
+      <Settings/>
       <Conditions/>
     </div>
     <div v-if="is_loading">
@@ -16,7 +30,9 @@
 <script>
 
 import product_conditions from '../api/product_conditions.js';
+//import master_list from '../api/master_list.js';
 import Conditions from './Conditions.vue';
+import Settings from './Settings.vue';
 import Header from './Layout/Header.vue';
 import Loading from './Parts/Loading.vue';
 
@@ -25,6 +41,7 @@ export default {
   components: {
     Conditions,
     Header,
+    Settings,
     Loading
   },
   data() {
@@ -48,22 +65,25 @@ export default {
       },
       is_login: {
         get() {
-          return this.$store.getters["user/is_login"];
+          return this.$store.getters["settings/is_login"];
         }
       },
       user: {
         get() {
-          return this.$store.getters["user/get_user"];
+          return this.$store.getters["settings/get_user"];
         }
       }
   },
   mounted() {
       const pc = new product_conditions();
+      //const master = new master_list();
       this.is_loading = true;
-      pc.read_conditions()
+      Promise.all([
+        pc.read()
+      ])
       .then((res) => {
-        if (res['data'] !== undefined && res['data']['res'] == true) {
-          let product_conditions = res['data']['data'];
+        if (res[0]['data'] !== undefined && res[0]['data']['res'] == true) {
+          let product_conditions = res[0]['data']['data'];
           this.$store.commit("product_conditions/set_product_conditions", product_conditions);
         }
       })
@@ -74,7 +94,7 @@ export default {
       .finally((res) => {
         this.is_loading = false;
         console.log(res);
-      })
+      });
   },
   created() {
 
@@ -98,9 +118,6 @@ h3 {
     justify-content: center;
 }
 
-.wrapper{
-    width: 80%;
-}
 
 ul {
   list-style-type: none;

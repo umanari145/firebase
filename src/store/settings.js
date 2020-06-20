@@ -1,8 +1,9 @@
 
-const user = {
+const settings = {
     namespaced: true,
     state:{
-        user:[]
+        user:[],
+        accounts:[]
     },
     getters:{
         get_user(state) {
@@ -10,11 +11,17 @@ const user = {
         },
         is_login(state) {
           return (state.user.email == 'umanari145@gmail.com' );
+        },
+        get_accounts(state) {
+          return state.accounts;
         }
     },
     mutations:{
         set_user(state, user) {
             state.user = user;
+        },
+        set_accounts(state, accounts) {
+          state.accounts = accounts;
         }
     },
     actions:{
@@ -22,4 +29,4 @@ const user = {
     }
 }
 
-export default user
+export default settings

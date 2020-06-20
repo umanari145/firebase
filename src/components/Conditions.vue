@@ -222,7 +222,7 @@ export default {
         };
 
         this.is_show_spinner = 1;
-        pc.delete_conditions(params)
+        pc.delete(params)
         .then((res) => {
           if (res['data']['res'] !== undefined &&res['data']['res'] == true) {
 
