@@ -1,9 +1,9 @@
-import $ from 'jquery';
 
-export default class settings {
+import api_base from './api_base.js';
 
-    constructor() {
+export default class settings extends api_base {
 
-    }
-
+  constructor () {
+      super('accounts')
+  }
 }

@@ -30,7 +30,7 @@
 <script>
 
 import product_conditions from '../api/product_conditions.js';
-//import master_list from '../api/master_list.js';
+import master_list from '../api/master_list.js';
 import Conditions from './Conditions.vue';
 import Settings from './Settings.vue';
 import Header from './Layout/Header.vue';
@@ -68,6 +68,11 @@ export default {
           return this.$store.getters["settings/is_login"];
         }
       },
+      master_list: {
+        get() {
+          return this.$store.getters["master_list/get_master_list"];
+        }
+      },
       user: {
         get() {
           return this.$store.getters["settings/get_user"];
@@ -76,15 +81,25 @@ export default {
   },
   mounted() {
       const pc = new product_conditions();
-      //const master = new master_list();
+      const master = new master_list();
       this.is_loading = true;
       Promise.all([
-        pc.read()
+        pc.read(),
+        master.read()
       ])
       .then((res) => {
         if (res[0]['data'] !== undefined && res[0]['data']['res'] == true) {
           let product_conditions = res[0]['data']['data'];
           this.$store.commit("product_conditions/set_product_conditions", product_conditions);
+        }
+        if (res[1]['data'] !== undefined && res[1]['data']['res'] == true) {
+          let master_list = res[1]['data']['data'];
+          for(var i = 0; i < master_list['interval'].length; i++) {
+            let val = master_list['interval'][i];
+            master_list['interval'][val] = val;
+          }
+
+          this.$store.commit("master_list/set_master_list", master_list);
         }
       })
       .catch((res) => {

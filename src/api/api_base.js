@@ -26,7 +26,6 @@ export default class api_base {
       url = `${this.url}${this.jname}`;
       type = 'POST';
     }
-
     let res;
     if (type == 'PUT') {
       res = await axios.put(url, data[prop]);
