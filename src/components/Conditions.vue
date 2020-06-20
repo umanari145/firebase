@@ -27,16 +27,15 @@
                             <th class="col_10">行番号</th>
                             <th class="col_10">削除</th>
                             <th class="col_40">商品名</th>
-                            <th class="col_25">価格帯</th>
-                            <th class="col_15">状態</th>
+                            <th class="col_40">価格帯</th>
                         </tr>
                     </thead>
                     <tbody class="table_fix_body">
                         <tr :key="index" v-for="(product, index) in filter_product_conditions"
-                            @click="edit_product_row(product)"
+                            @click="edit_product_row(product, index)"
                         >
                             <td class="col_10 t_c" >
-
+                              {{index + 1}}
                             </td>
                             <td class="col_10 t_c" v-on:click.stop="hoge">
                                 <input type="checkbox"
@@ -47,11 +46,8 @@
                             <td class="col_40">
                                 {{product.product_name}}
                             </td>
-                            <td class="col_25 t_c">
+                            <td class="col_40 t_c">
                                 {{between_price(product)}}
-                            </td>
-                            <td class="col_15 t_c">
-                                {{product.condition}}
                             </td>
                         </tr>
                     </tbody>
@@ -62,13 +58,16 @@
                 <table class="edit_table">
                     <thead>
                         <tr style="background:#E3E3E3;">
+                            <th class="col_15 t_c">番号</th>
                             <th class="col_45 t_c">商品名</th>
-                            <th class="col_35 t_c">価格帯</th>
-                            <th class="col_20 t_c">状態</th>
+                            <th class="col_40 t_c">価格帯</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
+                            <td>
+                              {{single_product.index}}
+                            </td>
                             <td class="col_45">
                                 <input type="text" class="condition_input centering"
                                 style="margin-top:10px;"
@@ -77,7 +76,7 @@
                                     {{product_err}}
                                 </div>
                             </td>
-                            <td class="col_35 t_c">
+                            <td class="col_55 t_c">
                                 <span style="display:flex;align-itmes:center;margin-top:10px;" class="centering">
                                     <input type="text" v-model="single_product.price_min" style="width:45%;" class="condition_input t_r">
                                     <span style="margin:0 5px;">〜</span>
@@ -86,13 +85,6 @@
                                 <div class="condition_err">
                                     {{price_err}}
                                 </div>
-                            </td>
-                            <td class="col_20 t_c" style="vertical-align:top;">
-                                <select v-model="single_product.condition" style="margin-top:10px;height:25px;">
-                                    <option :value="value" :key="value" v-for="(label, value) in master_lists.conditions">
-                                        {{label}}
-                                    </option>
-                                </select>
                             </td>
                         </tr>
                     </tbody>
@@ -250,10 +242,15 @@ export default {
         let sugarStr = new Sugar.String(str);
         return sugarStr.toNumber().format();
       },
-      edit_product_row(product = {}) {
+      edit_product_row(product = {}, index='') {
         this.is_show_list = 0;
         this.is_show_edit = 1;
         this.single_product = product;
+        if (index !== '') {
+          this.single_product.index = index + 1;
+        } else {
+          this.single_product.index = '';
+        }
         this.product_err = '';
         this.price_err = '';
       },
