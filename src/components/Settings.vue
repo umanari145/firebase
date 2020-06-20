@@ -3,7 +3,6 @@
     <modal name="settings"
     :width="1200"
     :height="550"
-    @before-open="read_accounts"
     >
     <div class="spininng_back" v-if="is_show_spinner == 1">
         <b-spinner label="Spinning" type="grow">
@@ -78,8 +77,8 @@
 </template>
 <script>
 
-import settings from '../api/settings.js';
 import Select from './Forms/Select';
+import settings from '../api/settings.js';
 
 const settings_api = new settings();
 
@@ -126,42 +125,6 @@ export default {
       },
       close_account_modal(){
         this.$modal.hide('settings');
-      },
-      delete_row(account_index) {
-        this.accounts.splice(account_index, 1);
-      },
-      add_row() {
-        this.accounts.push(this.make_single_account());
-      },
-      make_single_account() {
-        return {
-          'email':'',
-          'password':'',
-          'mode':'',
-          'is_on':true,
-          'interval':''
-        };
-      },
-      read_accounts() {
-        this.is_show_spinner = 1;
-        settings_api.read()
-        .then((res) =>{
-          if(res['data']['res'] == true && res['data']['data'] !== undefined) {
-            if (res['data']['data'].length > 0) {
-              this.accounts = res['data']['data'];
-            } else {
-              let single_account = this.make_single_account();
-              let accounts = [];
-              accounts.push(single_account);
-              this.accounts = accounts;
-            }
-          }
-        }).catch((err) => {
-          alert("読み込みに失敗しました。")
-          console.log(err);
-        }).finally(()=>{
-          this.is_show_spinner = 0;
-        })
       }
     },
     created() {

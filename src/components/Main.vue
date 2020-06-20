@@ -3,12 +3,12 @@
     <div class="wrapper centering" style="width:40%;">
         <Header></Header>
         <div class="centering" v-if="is_login">
-          <div class="centering t_c"
+          <div class="centering t_c btn btn-info"
           style="margin-top:20px;"
           @click="bootModal('settings')">
               ユーザー管理
           </div>
-          <div class="centering t_c"
+          <div class="centering t_c btn btn-primary"
           style="margin-top:20px;"
           @click="bootModal('product_conditions')">
               商品条件({{product_conditions.length}})
@@ -31,6 +31,7 @@
 
 import product_conditions from '../api/product_conditions.js';
 import master_list from '../api/master_list.js';
+import settings from '../api/settings.js';
 import Conditions from './Conditions.vue';
 import Settings from './Settings.vue';
 import Header from './Layout/Header.vue';
@@ -82,10 +83,13 @@ export default {
   mounted() {
       const pc = new product_conditions();
       const master = new master_list();
+      const settings_api = new settings();
+
       this.is_loading = true;
       Promise.all([
         pc.read(),
-        master.read()
+        master.read(),
+        settings_api.read()
       ])
       .then((res) => {
         if (res[0]['data'] !== undefined && res[0]['data']['res'] == true) {
@@ -98,9 +102,16 @@ export default {
             let val = master_list['interval'][i];
             master_list['interval'][val] = val;
           }
-
           this.$store.commit("master_list/set_master_list", master_list);
         }
+
+        if(res[2]['data']['res'] == true && res[2]['data']['data'] !== undefined) {
+          if (res[2]['data']['data'].length > 0) {
+            let accounts = res[2]['data']['data'];
+            this.$store.commit("settings/set_accounts", accounts);
+          }
+        }
+
       })
       .catch((res) => {
         alert("読み込みに失敗しました。");
