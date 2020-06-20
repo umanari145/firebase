@@ -1,5 +1,5 @@
 const firebase = require('firebase');
-const config = require('../config.js');
+const config = require('./config.js');
 const Sugar = require('sugar');
 const fs = require('fs');
 
@@ -7,6 +7,10 @@ const fs = require('fs');
 firebase.initializeApp(config.firebaseConfig);
 database = firebase.database();
 
+database.ref('master_list').once('value', (snapshot) => {
+  console.log(snapshot.val());
+})
+/*
 var text = fs.readFileSync("./product_conditions.txt", 'utf8');
 var lines = text.toString().split("\n");
 let total = [];
@@ -27,3 +31,4 @@ for (var i = 0;i < total.length ;i++) {
     console.log('---' + i);
     database.ref('product_conditions').push(total[i]);
 }
+*/

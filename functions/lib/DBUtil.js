@@ -24,15 +24,19 @@ module.exports = class DBUtil {
 
     const snapshot = await this.database.ref(jname).once('value');
 
+
     let items = snapshot.val();
     let data = [];
 
     if (!cUtil.isEmpty(items)) {
-
-      for(var key in items) {
-          let each_item = items[key];
-          each_item['key'] = key;
-          data.push(each_item);
+      if (jname == 'master_list') {
+        data = items;
+      } else {
+        for(var key in items) {
+            let each_item = items[key];
+            each_item['key'] = key;
+            data.push(each_item);
+        }
       }
     }
     return data;
