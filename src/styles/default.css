@@ -955,6 +955,10 @@ a.tag:hover, a.tag:active {
     margin-right: auto;
     margin-left: auto;
 }
+
+.col_5{
+  width: 5%;
+}
 .col_10{
     width: 10%;
 }
@@ -966,6 +970,10 @@ a.tag:hover, a.tag:active {
 }
 .col_25{
     width: 25%;
+}
+
+.col_30{
+  width: 30%;
 }
 .col_35{
     width: 35%;

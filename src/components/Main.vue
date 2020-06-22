@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="wrapper centering" style="width:40%;">
+    <div class="wrapper centering">
         <Header></Header>
         <div class="centering" v-if="is_login">
           <div class="centering t_c btn btn-info"
@@ -13,11 +13,8 @@
           @click="bootModal('product_conditions')">
               商品条件({{product_conditions.length}})
           </div>
-          <div class="centering t_c"
-          style="margin-top:20px;">
-            成績
-          </div>
 
+          <Score></Score>
         </div>
       <Settings/>
       <Conditions/>
@@ -32,8 +29,11 @@
 import product_conditions from '../api/product_conditions.js';
 import master_list from '../api/master_list.js';
 import settings from '../api/settings.js';
+import score from '../api/score.js';
+
 import Conditions from './Conditions.vue';
 import Settings from './Settings.vue';
+import Score from './Score.vue';
 import Header from './Layout/Header.vue';
 import Loading from './Parts/Loading.vue';
 
@@ -43,11 +43,13 @@ export default {
     Conditions,
     Header,
     Settings,
+    Score,
     Loading
   },
   data() {
     return {
-      is_loading:null
+      is_loading:null,
+      score:[]
     }
   },
   methods:{
@@ -81,50 +83,60 @@ export default {
       }
   },
   mounted() {
-      const pc = new product_conditions();
-      const master = new master_list();
-      const settings_api = new settings();
 
-      this.is_loading = true;
-      Promise.all([
-        pc.read(),
-        master.read(),
-        settings_api.read()
-      ])
-      .then((res) => {
-        if (res[0]['data'] !== undefined && res[0]['data']['res'] == true) {
-          let product_conditions = res[0]['data']['data'];
-          this.$store.commit("product_conditions/set_product_conditions", product_conditions);
-        }
-        if (res[1]['data'] !== undefined && res[1]['data']['res'] == true) {
-          let master_list = res[1]['data']['data'];
-          for(var i = 0; i < master_list['interval'].length; i++) {
-            let val = master_list['interval'][i];
-            master_list['interval'][val] = val;
-          }
-          this.$store.commit("master_list/set_master_list", master_list);
-        }
-
-        if(res[2]['data']['res'] == true && res[2]['data']['data'] !== undefined) {
-          if (res[2]['data']['data'].length > 0) {
-            let accounts = res[2]['data']['data'];
-            this.$store.commit("settings/set_accounts", accounts);
-          }
-        }
-
-      })
-      .catch((res) => {
-        alert("読み込みに失敗しました。");
-        console.log(res);
-      })
-      .finally((res) => {
-        this.is_loading = false;
-        console.log(res);
-      });
   },
   created() {
 
+    const pc = new product_conditions();
+    const master = new master_list();
+    const settings_api = new settings();
+    const score_api = new score();
+
+    this.is_loading = true;
+    Promise.all([
+      pc.read(),
+      master.read(),
+      settings_api.read(),
+      score_api.read()
+    ])
+    .then((res) => {
+      if (res[0]['data'] !== undefined && res[0]['data']['res'] == true) {
+        let product_conditions = res[0]['data']['data'];
+        this.$store.commit("product_conditions/set_product_conditions", product_conditions);
+      }
+      if (res[1]['data'] !== undefined && res[1]['data']['res'] == true) {
+        let master_list = res[1]['data']['data'];
+        for(var i = 0; i < master_list['interval'].length; i++) {
+          let val = master_list['interval'][i];
+          master_list['interval'][val] = val;
+        }
+        this.$store.commit("master_list/set_master_list", master_list);
+      }
+
+      if(res[2]['data']['res'] == true && res[2]['data']['data'] !== undefined) {
+        if (res[2]['data']['data'].length > 0) {
+          let accounts = res[2]['data']['data'];
+          this.$store.commit("settings/set_accounts", accounts);
+        }
+      }
+
+      if(res[3]['data']['res'] == true && res[3]['data']['data'] !== undefined) {
+        if (res[3]['data']['data'].length > 0) {
+          this.score = res[3]['data']['data'];
+        }
+      }
+
+    })
+    .catch((res) => {
+      alert("読み込みに失敗しました。");
+      console.log(res);
+    })
+    .finally((res) => {
+      this.is_loading = false;
+      console.log(res);
+    });
   }
+
 }
 </script>
 

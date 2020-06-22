@@ -7,7 +7,7 @@
     </div>
 </template>
 <script>
-import { VueLoading } from 'vue-loading-template'
+import {VueLoading} from 'vue-loading-template'
 
 export default {
   name: 'App',
