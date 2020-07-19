@@ -3,7 +3,7 @@
 node.jsからfirebaseへの簡易登録API
 
 ## 参考URL
-https://github.com/loveRandy/vue-cli3.0-vueadmin
+https://github.com/loveRandy/vue-cli3.0-vueadmin<br>
 https://www.maytry.net/start-pwa-by-vue-cli-3/
 
 ## ファイル構成
@@ -18,12 +18,15 @@ https://www.maytry.net/start-pwa-by-vue-cli-3/
 - storage.rule.json firebase上のstorageサービスの設定
 
 
-
 ## firebaseインストール
 
 プロジェクト作成機能があるためグローバルでインストール
 ```
-npm install -g firebase-tools
+npm install -g firebase firebase-tools 
+
+#firebase adminのインストールが必要
+cd functions
+npm install
 ```
 
 ## 独自API一覧
@@ -241,6 +244,22 @@ https://APIパス/v1/ 〜にアクセスすれば動く
 export NODE_ENV=dev
 cd /var/www/html
 firebase serve --host 0.0.0.0
+
+```
+=== Serving from '/var/www/html'...
+
+⚠  Your requested "node" version "8" doesn't match your global version "14"
+i  functions: Watching "/var/www/html/functions" for Cloud Functions...
+i  hosting: Serving hosting files from: dist
+✔  hosting: Local server: http://0.0.0.0:5000
+✔  functions[v1]: http function initialized (http://0.0.0.0:5001/dummy-80371/us-central1/v1).
+i  functions: Beginning execution of "v1"
+i  functions: Beginning execution of "v1"
+・・・・
+
+//http://0.0.0.0:5001/dummy-80371/us-central1/v1/〜
+//にアクセスをすることができる
+
 //nodeのサーバー立てなくてもこれでOK
 //環境変数で開発時と本番のURLを使い分ける
 ```
@@ -275,8 +294,12 @@ nodemon functions/index.js
    To create a production build, run npm run build.
 
 ```
-
 http://localhost:8080 にアクセスするとvueのファイルが見れる。
+
+package.json,gitignoreに関しては<br>
+実際は適当なディレクトリに作り、一段上の階層にファイルを移動し、vueで作ったpackage.jsonやgitignoreなどは手でマージ。
+
+### 通常の開発
 
 cf.簡易サーバー(コンテナ外からでも使える)
 ```
@@ -284,6 +307,17 @@ npm i -g http-server
 cd public
 http-server
 ```
+#### vueのhot reload
 
-package.json,gitignoreに関しては<br>
-実際は適当なディレクトリに作り、一段上の階層にファイルを移動し、vueで作ったpackage.jsonやgitignoreなどは手でマージ。
+```
+npm run serve
+```
+
+http://localhost:8080 にアクセスすればOK
+
+#### ビルド
+
+成果物をdistファイルに作成
+```
+npm run build
+```
