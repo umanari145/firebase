@@ -24,7 +24,7 @@ https://www.maytry.net/start-pwa-by-vue-cli-3/
 ```
 npm install -g firebase firebase-tools 
 
-#firebase adminのインストールが必要
+#functionsの中に firebase adminのインストールが必要
 cd functions
 npm install
 ```
@@ -245,7 +245,6 @@ export NODE_ENV=dev
 cd /var/www/html
 firebase serve --host 0.0.0.0
 
-```
 === Serving from '/var/www/html'...
 
 ⚠  Your requested "node" version "8" doesn't match your global version "14"
@@ -299,7 +298,14 @@ http://localhost:8080 にアクセスするとvueのファイルが見れる。
 package.json,gitignoreに関しては<br>
 実際は適当なディレクトリに作り、一段上の階層にファイルを移動し、vueで作ったpackage.jsonやgitignoreなどは手でマージ。
 
-### 通常の開発
+### 通常の開発 vueのhot reload
+
+```
+npm run serve
+```
+
+http://localhost:8080 にアクセスすればOK
+
 
 cf.簡易サーバー(コンテナ外からでも使える)
 ```
@@ -307,13 +313,6 @@ npm i -g http-server
 cd public
 http-server
 ```
-#### vueのhot reload
-
-```
-npm run serve
-```
-
-http://localhost:8080 にアクセスすればOK
 
 #### ビルド
 
