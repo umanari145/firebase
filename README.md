@@ -67,6 +67,7 @@ curl -X DELETE \
 ```
 
 ## firebase コマンド
+loginはdocker内部でも外でもOKだがconsole単位で行う
 
 ```
 firebase login
@@ -185,7 +186,7 @@ i  Writing project information to .firebaserc...
 ```
 
 
-### デプロイ
+### デプロイ(docker内部で作業)
 ```
 cd /var/www/html
 firebase deploy
@@ -238,9 +239,11 @@ https://APIパス/v1/ 〜にアクセスすれば動く
 
 
 #### API(開発時)
+*docker内部で作業
 
 ```
 //この変数で開発ということを判定(dockerに入ってます)
+//軌道に非常に時間がかかる(2〜3分弱)
 export NODE_ENV=dev
 cd /var/www/html
 firebase serve --host 0.0.0.0
@@ -298,7 +301,7 @@ http://localhost:8080 にアクセスするとvueのファイルが見れる。
 package.json,gitignoreに関しては<br>
 実際は適当なディレクトリに作り、一段上の階層にファイルを移動し、vueで作ったpackage.jsonやgitignoreなどは手でマージ。
 
-### 通常の開発 vueのhot reload
+### 通常の開発 vueのhot reload(docker内で作業)
 
 ```
 npm run serve
